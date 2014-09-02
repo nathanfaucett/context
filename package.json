@@ -1,0 +1,26 @@
+{
+  "name": "context",
+  "version": "0.0.1",
+  "description": "response and request helpers",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nathanfaucett/context.git"
+  },
+  "main": "src/index.js",
+  "keywords": [
+    "context",
+    "context.js"
+  ],
+  "author": "Nathan Faucett",
+  "license": "BSD-2-Clause",
+  "readmeFilename": "README.md",
+  "devDependencies": {
+    "grunt": "",
+    "grunt-jsbeautifier": ""
+  },
+  "dependencies": {
+    "utils": "nathanfaucett/utils",
+    "http_error": "nathanfaucett/http_error",
+    "mime": "nathanfaucett/mime"
+  }
+}
