@@ -14,8 +14,8 @@ function Cookie(name, value, unparsed, opts) {
     this.domain = opts.domain || null;
     this.expires = opts.expires || null;
     this.maxAge = opts.maxAge || null;
-    this.secure = !! opts.secure || null;
-    this.httpOnly = opts.httpOnly != null ? !! opts.httpOnly : true;
+    this.secure = !!opts.secure || null;
+    this.httpOnly = opts.httpOnly != null ? !!opts.httpOnly : true;
     this.unparsed = unparsed;
 }
 

@@ -1,4 +1,4 @@
-var Response = require("http").OutgoingMessage,
+var Response = module.exports = require("http").OutgoingMessage,
     HttpError = require("http_error"),
     utils = require("utils"),
     filePath = require("file_path"),
@@ -13,14 +13,14 @@ var JSONP_RESTRICT_CHARSET = /[^\[\]\w$.]/g,
 Response.prototype.init = function(req) {
 
     this.req = this.request = req;
-    
+
     this.locals = this.locals || {};
 
     return this;
 };
 
 Response.prototype.JSONstringify = function(body) {
-    
+
     return JSON.stringify(body);
 };
 
@@ -102,7 +102,7 @@ Response.prototype.jsonp = function(code, obj, callbackName) {
     this.contentType = "application/json";
     this.charset = "utf-8";
 
-    if (typeof(callback) == "string" && callback.length !== 0) {
+    if (typeof(callback) === "string" && callback.length !== 0) {
         callback = callback.replace(JSONP_RESTRICT_CHARSET, "");
 
         body = body.replace(LINE_U2028, "\\u2028").replace(PARAGRAPH_U2028, "\\u2029");

@@ -1,4 +1,4 @@
-var Request = require("http").IncomingMessage,
+var Request = module.exports = require("http").IncomingMessage,
     url = require("url"),
 
     utils = require("utils"),
@@ -34,10 +34,17 @@ Request.prototype.init = function(res) {
 };
 
 Request.prototype.param = function(key) {
-    return (
-        this.param && this.param[key] ||
-        this.query[key]
-    );
+    var query = this.query,
+        params = this.params,
+        body = this.body || this._body,
+        form = this.form || this._form;
+
+    if (query[key] != null) return query[key];
+    if (params && params[key] != null) return params[key];
+    if (body && body[key] != null) return body[key];
+    if (form && form[key] != null) return form[key];
+
+    return undefined;
 };
 
 Request.prototype.getHeader = Request.prototype.header = function(name) {
