@@ -1,7 +1,7 @@
 var Request = module.exports = require("http").IncomingMessage,
     url = require("url"),
 
-    utils = require("utils"),
+    type = require("type"),
     mime = require("mime"),
     Cookie = require("./cookie");
 
@@ -56,7 +56,7 @@ Request.prototype.setHeader = function(name, value) {
 };
 
 Request.prototype.setHeaders = function(values) {
-    if (!utils.isObject(headers)) return this;
+    if (!type.isObject(headers)) return this;
     var headers = this.headers;
 
     for (var key in values) headers[key.toLowerCase()] = values[key];
@@ -236,7 +236,7 @@ Request.prototype.accepts = function(types) {
         accepts = [],
         type, i, il;
 
-    types = utils.isArray(types) ? types : (utils.isString(types) ? types.split(SPLITER) : []);
+    types = type.isArray(types) ? types : (type.isString(types) ? types.split(SPLITER) : []);
 
     for (i = 0, il = types.length; i < il; i++) {
         type = parseAccepts(types[i]);
@@ -266,7 +266,7 @@ Request.prototype.acceptsLanguage = function(types) {
         accepts = [],
         type, i, il;
 
-    types = utils.isArray(types) ? types : types.split(SPLITER);
+    types = type.isArray(types) ? types : types.split(SPLITER);
 
     for (i = 0, il = types.length; i < il; i++) {
         type = parseAccepts(types[i]);

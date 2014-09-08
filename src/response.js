@@ -1,6 +1,5 @@
 var Response = module.exports = require("http").OutgoingMessage,
     HttpError = require("http_error"),
-    utils = require("utils"),
     filePath = require("file_path"),
     fs = require("fs");
 

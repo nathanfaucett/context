@@ -1,8 +1,8 @@
-var utils = require("utils");
+var type = require("type");
 
 
 function Cookie(name, value, unparsed, opts) {
-    if (utils.isObject(unparsed)) {
+    if (type.isObject(unparsed)) {
         opts = unparsed;
         unparsed = null;
     }
