@@ -234,13 +234,13 @@ Request.prototype.cookies = function() {
 Request.prototype.accepts = function(types) {
     var accept = this.accept,
         accepts = [],
-        type, i, il;
+        typeObj, i, il;
 
     types = type.isArray(types) ? types : (type.isString(types) ? types.split(SPLITER) : []);
 
     for (i = 0, il = types.length; i < il; i++) {
-        type = parseAccepts(types[i]);
-        if (acceptType(accept, type)) accepts.push(type.type);
+        typeObj = parseAccepts(types[i]);
+        if (acceptType(accept, typeObj)) accepts.push(typeObj.type);
     }
 
     return accepts;
@@ -249,13 +249,13 @@ Request.prototype.accepts = function(types) {
 Request.prototype.acceptsEncoding = function(types) {
     var acceptEncoding = this.acceptEncoding,
         accepts = [],
-        type, i, il;
+        typeObj, i, il;
 
     types = Array.isArray(types) ? types : types.split(SPLITER);
 
     for (i = 0, il = types.length; i < il; i++) {
-        type = parseAccepts(types[i]);
-        if (acceptType(acceptEncoding, type)) accepts.push(type.type);
+        typeObj = parseAccepts(types[i]);
+        if (acceptType(acceptEncoding, typeObj)) accepts.push(typeObj.type);
     }
 
     return accepts;
@@ -264,13 +264,13 @@ Request.prototype.acceptsEncoding = function(types) {
 Request.prototype.acceptsLanguage = function(types) {
     var acceptLanguage = this.acceptLanguage,
         accepts = [],
-        type, i, il;
+        typeObj, i, il;
 
     types = type.isArray(types) ? types : types.split(SPLITER);
 
     for (i = 0, il = types.length; i < il; i++) {
-        type = parseAccepts(types[i]);
-        if (acceptType(acceptLanguage, type)) accepts.push(type.type);
+        typeObj = parseAccepts(types[i]);
+        if (acceptType(acceptLanguage, typeObj)) accepts.push(typeObj.type);
     }
 
     return accepts;
@@ -280,11 +280,11 @@ function parseAcceptTypes(headers) {
     var types = (headers["accept"] || "").split(SPLITER),
         accepts = [],
         i = types.length,
-        type;
+        typeObj;
 
     while (i--) {
-        type = parseAccepts(types[i]);
-        if (type === "*/*" || mime.lookUpExt(type.type, false)) accepts.push(type);
+        typeObj = parseAccepts(types[i]);
+        if (typeObj.type === "*/*" || mime.lookUpExt(typeObj.type, false)) accepts.push(typeObj);
     }
     accepts.sort(sortByQValue);
 
@@ -295,11 +295,11 @@ function parseAcceptEncodings(headers) {
     var types = (headers["accept-encoding"] || "").split(SPLITER),
         accept = [],
         i = types.length,
-        type;
+        typeObj;
 
     while (i--) {
-        type = parseAccepts(types[i]);
-        accept.push(type);
+        typeObj = parseAccepts(types[i]);
+        accept.push(typeObj);
     }
     accept.sort(sortByQValue);
 
@@ -310,11 +310,11 @@ function parseAcceptLanguages(headers) {
     var types = (headers["accept-language"] || "").split(SPLITER),
         accept = [],
         i = types.length,
-        type;
+        typeObj;
 
     while (i--) {
-        type = parseAccepts(types[i]);
-        accept.push(type);
+        typeObj = parseAccepts(types[i]);
+        accept.push(typeObj);
     }
     accept.sort(sortByQValue);
 
@@ -325,8 +325,8 @@ function sortByQValue(a, b) {
     return a.q - b.q;
 }
 
-function parseAccepts(type) {
-    var parts = type.split(";"),
+function parseAccepts(str) {
+    var parts = str.split(";"),
         value = parts[0],
         q = +((parts[1] || "q=1").split("=").pop()) || 0;
 
@@ -336,13 +336,13 @@ function parseAccepts(type) {
     };
 }
 
-function acceptType(accepts, type) {
+function acceptType(accepts, typeObj) {
     var i = accepts.length,
         value;
 
     while (i--) {
         value = accepts[i];
-        if (value.type === "*/*" || (type.type === value.type && type.q >= value.q)) return true;
+        if (value.type === "*/*" || (typeObj.type === value.type && typeObj.q >= value.q)) return true;
     }
 
     return false;
