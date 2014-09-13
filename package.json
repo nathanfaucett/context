@@ -19,8 +19,9 @@
     "grunt-jsbeautifier": ""
   },
   "dependencies": {
-    "type": "nathanfaucett/type",
+    "file_path": "git://github.com/nathanfaucett/file_path",
     "http_error": "nathanfaucett/http_error",
-    "mime": "nathanfaucett/mime"
+    "mime": "nathanfaucett/mime",
+    "type": "nathanfaucett/type"
   }
 }
