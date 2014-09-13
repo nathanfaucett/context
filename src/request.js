@@ -1,6 +1,7 @@
 var Request = module.exports = require("http").IncomingMessage,
     url = require("url"),
 
+    qs = require("qs"),
     type = require("type"),
     mime = require("mime"),
     Cookie = require("./cookie");
@@ -12,13 +13,16 @@ var SPLITER = /[, ]+/,
 
 Request.prototype.init = function(res) {
     var headers = this.headers,
+        fullUrl = url.parse((this.protocol || (this.secure ? "https" : "http")) + "://" + headers["host"] + this.url, false, false),
         locals = res.locals || (res.locals = {});
+
+    fullUrl.query = qs.parse(fullUrl.query);
 
     this.res = this.response = res;
 
-    this.fullUrl = url.parse((this.protocol || (this.secure ? "https" : "http")) + "://" + headers["host"] + this.url, true, false);
-    this.pathname = this.fullUrl.pathname;
-    this.query = this.fullUrl.query;
+    this.fullUrl = fullUrl;
+    this.pathname = fullUrl.pathname;
+    this.query = fullUrl.query;
 
     headers["referer"] = headers["referrer"] = (headers["referer"] || headers["referrer"] || "");
     this.locale = (headers["accept-language"] || "").split(SPLITER)[0].split("-")[0] || "en";
