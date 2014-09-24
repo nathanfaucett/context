@@ -9,9 +9,10 @@ var JSONP_RESTRICT_CHARSET = /[^\[\]\w$.]/g,
     PARAGRAPH_U2028 = /\u2028/g;
 
 
-Response.prototype.init = function(req) {
+Response.prototype.init = function(req, config) {
 
     this.req = this.request = req;
+    this.config = config;
 
     this.locals = this.locals || {};
 
@@ -19,8 +20,9 @@ Response.prototype.init = function(req) {
 };
 
 Response.prototype.JSONstringify = function(body) {
+    var config = this.config;
 
-    return JSON.stringify(body);
+    return JSON.stringify(body, config.get("json replacer"), config.get("json spaces"));
 };
 
 Response.prototype.send = function(code, body, headers) {
@@ -88,14 +90,14 @@ Response.prototype.json = function(code, obj) {
     return this.send(code, body);
 };
 
-Response.prototype.jsonp = function(code, obj, callbackName) {
+Response.prototype.jsonp = function(code, obj) {
     if (typeof(code) !== "number") {
         callbackName = obj;
         obj = code;
         code = 200;
     }
     var body = this.JSONstringify(obj),
-        callback = this.req.param((callbackName || "callback"));
+        callback = this.req.param((config.get("jsonp callback name") || "callback"));
 
     this.setHeader("x-content-type-options", "nosniff");
     this.contentType = "application/json";
