@@ -11,7 +11,7 @@ var SPLITER = /[, ]+/,
     COLON_END = /;|$/;
 
 
-Request.prototype.init = function(res) {
+Request.prototype.init = function(res, config) {
     var headers = this.headers,
         fullUrl = url.parse((this.protocol || (this.secure ? "https" : "http")) + "://" + headers["host"] + this.url, false, false),
         locals = res.locals || (res.locals = {});
