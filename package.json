@@ -21,7 +21,6 @@
   "dependencies": {
     "file_path": "git://github.com/nathanfaucett/file_path",
     "http_error": "nathanfaucett/http_error",
-    "config": "nathanfaucett/config",
     "mime": "nathanfaucett/mime",
     "qs": "git://github.com/nathanfaucett/qs",
     "type": "nathanfaucett/type"

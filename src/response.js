@@ -12,7 +12,7 @@ var JSONP_RESTRICT_CHARSET = /[^\[\]\w$.]/g,
 Response.prototype.init = function(req, config) {
 
     this.req = this.request = req;
-    this.config = config;
+    this.config = config || {};
 
     this.locals = this.locals || {};
 
@@ -22,7 +22,7 @@ Response.prototype.init = function(req, config) {
 Response.prototype.JSONstringify = function(body) {
     var config = this.config;
 
-    return JSON.stringify(body, config.get("json replacer"), config.get("json spaces"));
+    return JSON.stringify(body, config["json replacer"], config["json spaces"]);
 };
 
 Response.prototype.send = function(code, body, headers) {
@@ -97,7 +97,7 @@ Response.prototype.jsonp = function(code, obj) {
         code = 200;
     }
     var body = this.JSONstringify(obj),
-        callback = this.req.param((config.get("jsonp callback name") || "callback"));
+        callback = this.req.param((this.config["jsonp callback name"] || "callback"));
 
     this.setHeader("x-content-type-options", "nosniff");
     this.contentType = "application/json";

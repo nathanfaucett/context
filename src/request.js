@@ -19,7 +19,7 @@ Request.prototype.init = function(res, config) {
     fullUrl.query = qs.parse(fullUrl.query);
 
     this.res = this.response = res;
-    this.config = config;
+    this.config = config || {};
 
     this.fullUrl = fullUrl;
     this.pathname = fullUrl.pathname;

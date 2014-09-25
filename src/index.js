@@ -1,5 +1,4 @@
-var createConfig = require("config"),
-    context = module.exports;
+var context = module.exports;
 
 
 context.Request = require("./request");
@@ -7,16 +6,8 @@ context.Response = require("./response");
 context.Cookie = require("./cookie");
 
 
-context.createInit = function(options) {
-    var config = createConfig(options);
+context.init = function(req, res, config) {
 
-    function init(req, res) {
-
-        res.init(req, config);
-        req.init(res, config);
-    }
-
-    init.config = config;
-
-    return init;
+    res.init(req, config);
+    req.init(res, config);
 };
