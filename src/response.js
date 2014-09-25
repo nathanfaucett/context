@@ -79,25 +79,30 @@ Response.prototype.send = function(code, body, headers) {
 };
 
 Response.prototype.json = function(code, obj) {
+    var body
+
     if (typeof(code) !== "number") {
         obj = code;
         code = 200;
     }
-    var body = this.JSONstringify(obj);
 
+    body = this.JSONstringify(obj);
     this.contentType = "application/json";
 
     return this.send(code, body);
 };
 
 Response.prototype.jsonp = function(code, obj) {
+    var body, callback
+
     if (typeof(code) !== "number") {
         callbackName = obj;
         obj = code;
         code = 200;
     }
-    var body = this.JSONstringify(obj),
-        callback = this.req.param((this.config["jsonp callback name"] || "callback"));
+
+    body = this.JSONstringify(obj);
+    callback = this.req.param((this.config["jsonp callback name"] || "callback"));
 
     this.setHeader("x-content-type-options", "nosniff");
     this.contentType = "application/json";
@@ -139,10 +144,12 @@ Response.prototype.modified = function(dateString) {
 
 Object.defineProperty(Response.prototype, "charset", {
     get: function() {
+        var type, charset, index, tmp;
+
         if (this._charset !== null) return this._charset;
-        var type = this.getHeader("Content-Type"),
-            charset = "utf-8",
-            index, tmp;
+
+        type = this.getHeader("Content-Type");
+        charset = "utf-8";
 
         if (type && (index = type.indexOf(";")) !== -1) {
             if ((tmp = type.substring(index).split("=")[1])) this._charset = tmp;
@@ -162,9 +169,10 @@ Object.defineProperty(Response.prototype, "charset", {
 
 Object.defineProperty(Response.prototype, "contentType", {
     get: function() {
+        var type, charset, index;
+
         if (this._contentType !== null) return this._contentType;
-        var type = this.getHeader("Content-Type"),
-            charset, index;
+        type = this.getHeader("Content-Type");
 
         if (!type) {
             this._contentType = "application/octet-stream";
@@ -197,8 +205,10 @@ Object.defineProperty(Response.prototype, "contentType", {
 
 Object.defineProperty(Response.prototype, "contentLength", {
     get: function() {
+        var length;
+
         if (this._contentLength !== null) return this._contentLength;
-        var length = +(this.getHeader("Content-Length"));
+        length = +(this.getHeader("Content-Length"));
 
         if (length) {
             this._contentLength = length;
@@ -222,7 +232,9 @@ Object.defineProperty(Response.prototype, "sent", {
 });
 
 Response.prototype.setHeaders = function(values) {
-    for (var key in values) this.setHeader(key, values[key]);
+    var key;
+    if (!type.isObject(values)) return this;
+    for (key in values) this.setHeader(key, values[key]);
     return this;
 };
 

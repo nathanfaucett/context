@@ -61,10 +61,12 @@ Request.prototype.setHeader = function(name, value) {
 };
 
 Request.prototype.setHeaders = function(values) {
-    if (!type.isObject(headers)) return this;
-    var headers = this.headers;
+    var headers, key;
 
-    for (var key in values) headers[key.toLowerCase()] = values[key];
+    if (!type.isObject(headers)) return this;
+    headers = this.headers;
+
+    for (key in values) headers[key.toLowerCase()] = values[key];
     return this;
 };
 
@@ -77,10 +79,11 @@ Request.prototype.removeHeader = Request.prototype.deleteHeader;
 
 Object.defineProperty(Request.prototype, "charset", {
     get: function() {
+        var type, charset, index, tmp;
+
         if (this._charset !== null) return this._charset;
-        var type = this.headers["content-type"],
-            charset = "utf-8",
-            index, tmp;
+        type = this.headers["content-type"];
+        charset = "utf-8";
 
         if (type && (index = type.indexOf(";")) !== -1) {
             if ((tmp = type.substring(index).split("=")[1])) this._charset = tmp;
@@ -100,9 +103,10 @@ Object.defineProperty(Request.prototype, "charset", {
 
 Object.defineProperty(Request.prototype, "contentType", {
     get: function() {
+        var type, charset, index;
+
         if (this._contentType !== null) return this._contentType;
-        var type = this.headers["content-type"],
-            charset, index;
+        type = this.headers["content-type"];
 
         if (!type) {
             this._contentType = "application/octet-stream";
@@ -135,8 +139,10 @@ Object.defineProperty(Request.prototype, "contentType", {
 
 Object.defineProperty(Request.prototype, "contentLength", {
     get: function() {
+        var length;
+
         if (this._contentLength !== null) return this._contentLength;
-        var length = +(this.headers["content-length"]);
+        length = +(this.headers["content-length"]);
 
         if (length) {
             this._contentLength = length;
