@@ -38,18 +38,16 @@ Request.prototype.init = function(res, config) {
     return this;
 };
 
-Request.prototype.param = function(key) {
-    var query = this.query,
-        params = this.params,
-        body = this.body || this._body,
-        form = this.form || this._form;
+Request.prototype.param = function(name, defaultValue) {
+    var params = this.params,
+        body = this.body,
+        query = this.query;
 
-    if (query[key] != null) return query[key];
-    if (params && params[key] != null) return params[key];
-    if (body && body[key] != null) return body[key];
-    if (form && form[key] != null) return form[key];
+    if (params && params[name] != null) return params[name];
+    if (body && body[name] != null) return body[name];
+    if (query && query[name] != null) return query[name];
 
-    return undefined;
+    return defaultValue;
 };
 
 Request.prototype.getHeader = Request.prototype.header = function(name) {
@@ -181,11 +179,6 @@ Object.defineProperty(Request.prototype, "secure", {
         return this.protocol === "https";
     }
 });
-
-Request.prototype.param = function(name) {
-
-    return this.params[name] || this.query[name];
-};
 
 Request.prototype.cookie = function(name) {
     var header = (this.headers["cookie"] || ""),
