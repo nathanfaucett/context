@@ -1,7 +1,5 @@
 var Response = module.exports = require("http").OutgoingMessage,
-    HttpError = require("http_error"),
-    filePath = require("file_path"),
-    fs = require("fs");
+    HttpError = require("http_error");
 
 
 var JSONP_RESTRICT_CHARSET = /[^\[\]\w$.]/g,
@@ -27,8 +25,7 @@ Response.prototype.JSONstringify = function(body) {
 
 Response.prototype.send = function(code, body, headers) {
     var isHead = this.request.method === "HEAD",
-        contentType = (headers && (headers["content-type"] || headers["Content-Type"])) || this.contentType,
-        index;
+        contentType = (headers && (headers["content-type"] || headers["Content-Type"])) || this.contentType;
 
     if (code instanceof Error) {
         if (code instanceof HttpError) {

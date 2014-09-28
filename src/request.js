@@ -215,7 +215,7 @@ Request.prototype.cookies = function() {
     var header = (this.headers.cookie || "").split(";"),
         cookies = this._cookies || (this._cookies = {}),
         i = header.length,
-        unparsed, index, parts, name, value;
+        unparsed, index, name, value;
 
     while (i--) {
         unparsed = header[i];
