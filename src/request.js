@@ -13,7 +13,7 @@ var SPLITER = /[, ]+/,
 
 Request.prototype.init = function(res, config) {
     var headers = this.headers,
-        fullUrl = url.parse((this.protocol || (this.secure ? "https" : "http")) + "://" + headers["host"] + this.url, false, false),
+        fullUrl = url.parse((this.protocol || (this.secure ? "https" : "http")) + "://" + headers.host + this.url, false, false),
         locals = res.locals || (res.locals = {});
 
     fullUrl.query = qs.parse(fullUrl.query);
@@ -25,7 +25,7 @@ Request.prototype.init = function(res, config) {
     this.pathname = fullUrl.pathname;
     this.query = fullUrl.query;
 
-    headers["referer"] = headers["referrer"] = (headers["referer"] || headers["referrer"] || "");
+    headers.referer = headers.referrer = (headers.referer || headers.referrer || "");
     this.locale = (headers["accept-language"] || "").split(SPLITER)[0].split("-")[0] || "en";
 
     locals.locale = this.locale;
@@ -55,7 +55,7 @@ Request.prototype.getHeader = Request.prototype.header = function(name) {
 };
 
 Request.prototype.setHeader = function(name, value) {
-    return this.headers[name.toLowerCase()] = value;
+    return (this.headers[name.toLowerCase()] = value);
 };
 
 Request.prototype.setHeaders = function(values) {
@@ -87,7 +87,7 @@ Object.defineProperty(Request.prototype, "charset", {
             if ((tmp = type.substring(index).split("=")[1])) this._charset = tmp;
         }
 
-        return this._charset = charset;
+        return (this._charset = charset);
     },
     set: function(value) {
         value || (value = "utf-8");
@@ -181,7 +181,7 @@ Object.defineProperty(Request.prototype, "secure", {
 });
 
 Request.prototype.cookie = function(name) {
-    var header = (this.headers["cookie"] || ""),
+    var header = (this.headers.cookie || ""),
         cookies = this._cookies || (this._cookies = {}),
         start, eq, cookie, unparsed, index, value;
 
@@ -212,7 +212,7 @@ Request.prototype.cookie = function(name) {
 };
 
 Request.prototype.cookies = function() {
-    var header = (this.headers["cookie"] || "").split(";"),
+    var header = (this.headers.cookie || "").split(";"),
         cookies = this._cookies || (this._cookies = {}),
         i = header.length,
         unparsed, index, parts, name, value;
@@ -281,7 +281,7 @@ Request.prototype.acceptsLanguage = function(types) {
 };
 
 function parseAcceptTypes(headers) {
-    var types = (headers["accept"] || "").split(SPLITER),
+    var types = (headers.accept || "").split(SPLITER),
         accepts = [],
         i = types.length,
         typeObj;

@@ -79,7 +79,7 @@ Response.prototype.send = function(code, body, headers) {
 };
 
 Response.prototype.json = function(code, obj) {
-    var body
+    var body;
 
     if (typeof(code) !== "number") {
         obj = code;
@@ -93,7 +93,7 @@ Response.prototype.json = function(code, obj) {
 };
 
 Response.prototype.jsonp = function(code, obj) {
-    var body, callback
+    var body, callback;
 
     if (typeof(code) !== "number") {
         callbackName = obj;
@@ -155,7 +155,7 @@ Object.defineProperty(Response.prototype, "charset", {
             if ((tmp = type.substring(index).split("=")[1])) this._charset = tmp;
         }
 
-        return this._charset = charset;
+        return (this._charset = charset);
     },
     set: function(value) {
         value || (value = "utf-8");
