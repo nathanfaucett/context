@@ -208,8 +208,12 @@ Request.prototype.cookie = function(name) {
         unparsed = unparsed.trim();
 
         if ((index = unparsed.indexOf("=")) !== -1) {
-            name = unparsed.substring(0, index);
-            value = unparsed.substring(index + 1);
+            try {
+                name = decodeURIComponent(unparsed.substring(0, index));
+                value = decodeURIComponent(unparsed.substring(index + 1));
+            } catch (e) {
+                return cookie;
+            }
         } else {
             return cookie;
         }
@@ -232,8 +236,12 @@ Request.prototype.cookies = function() {
         unparsed = unparsed.trim();
 
         if ((index = unparsed.indexOf("=")) !== -1) {
-            name = unparsed.substring(0, index);
-            value = unparsed.substring(index + 1);
+            try {
+                name = decodeURIComponent(unparsed.substring(0, index));
+                value = decodeURIComponent(unparsed.substring(index + 1));
+            } catch (e) {
+                continue;
+            }
         } else {
             continue;
         }
