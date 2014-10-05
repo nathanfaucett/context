@@ -1,5 +1,7 @@
-var Response = module.exports = require("http").OutgoingMessage,
-    HttpError = require("http_error");
+var http = require("http"),
+    Response = module.exports = http.OutgoingMessage,
+    STATUS_CODES = http.STATUS_CODES;
+HttpError = require("http_error");
 
 
 var JSONP_RESTRICT_CHARSET = /[^\[\]\w$.]/g,
@@ -121,6 +123,38 @@ Response.prototype.jsonp = function(code, obj) {
     }
 
     return this.send(code, body);
+};
+
+Response.prototype.redirect = function redirect(status, url) {
+    var address = url,
+        contentType = this.contentType,
+        body, u;
+
+    if (typeof(status) === "string") {
+        url = status;
+        status = 302;
+    }
+
+    this.location(address);
+    address = this.getHeader("Location");
+
+    if (contentType === "text/plain") {
+        body = STATUS_CODES[status] + ". Redirecting to " + encodeURI(url);
+    } else if (contentType === "text/html") {
+        u = escapeHtml(url);
+        body = "<p>" + STATUS_CODES[status] + ". Redirecting to <a href=\"" + u + "\">" + u + "</a></p>";
+    } else {
+        body = "";
+    }
+
+    this.statusCode = status;
+    this.contentLength = Buffer.byteLength(body);
+
+    if (this.req.method === "HEAD") {
+        return this.end();
+    }
+
+    return this.end(body);
 };
 
 Response.prototype.setCookie = function(cookie) {
@@ -279,4 +313,13 @@ if (!hasOwnProp.call(Response.prototype, "nativeEnd")) {
 
         return this.nativeEnd(data, encoding);
     };
+}
+
+function escapeHtml(html) {
+    return String(html)
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
 }
