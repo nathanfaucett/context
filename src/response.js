@@ -18,6 +18,12 @@ function defineProperty(obj, prop, desc) {
 
 
 Response.prototype.init = function(req, config) {
+    var referer = this.getHeader("Referer") || this.getHeader("Referrer");
+
+    if (referer) {
+        this.setHeader("Referer", referer);
+        this.setHeader("Referrer", referer);
+    }
 
     this.req = this.request = req;
     this.config = config || {};
@@ -125,9 +131,16 @@ Response.prototype.jsonp = function(code, obj) {
     return this.send(code, body);
 };
 
+Response.prototype.location = function(url) {
+
+    if (url === "back") url = this.request.getHeader("referrer") || "/";
+    this.setHeader("Location", url);
+
+    return this;
+};
+
 Response.prototype.redirect = function redirect(status, url) {
-    var address = url,
-        contentType = this.contentType,
+    var contentType = this.contentType,
         body, u;
 
     if (typeof(status) === "string") {
@@ -135,8 +148,8 @@ Response.prototype.redirect = function redirect(status, url) {
         status = 302;
     }
 
-    this.location(address);
-    address = this.getHeader("Location");
+    this.location(url);
+    url = this.getHeader("Location");
 
     if (contentType === "text/plain") {
         body = STATUS_CODES[status] + ". Redirecting to " + encodeURI(url);
@@ -150,11 +163,15 @@ Response.prototype.redirect = function redirect(status, url) {
     this.statusCode = status;
     this.contentLength = Buffer.byteLength(body);
 
-    if (this.req.method === "HEAD") {
-        return this.end();
+    if (this.request.method === "HEAD") {
+        this.end();
+    } else {
+        this.end(body);
     }
 
-    return this.end(body);
+    this.writeHead(status);
+
+    return this;
 };
 
 Response.prototype.setCookie = function(cookie) {
