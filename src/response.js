@@ -96,7 +96,7 @@ Response.prototype.json = function(code, obj) {
 
     if (typeof(code) !== "number") {
         obj = code;
-        code = 200;
+        code = this.statusCode;
     }
 
     body = this.JSONstringify(obj);
@@ -111,7 +111,7 @@ Response.prototype.jsonp = function(code, obj) {
     if (typeof(code) !== "number") {
         callbackName = obj;
         obj = code;
-        code = 200;
+        code = this.statusCode;
     }
 
     body = this.JSONstringify(obj);
