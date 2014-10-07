@@ -202,7 +202,7 @@ defineProperty(Response.prototype, "charset", {
     get: function() {
         var type, charset, index, tmp;
 
-        if (this._charset !== null) return this._charset;
+        if (this._charset != null) return this._charset;
 
         type = this.getHeader("Content-Type");
         charset = "utf-8";
@@ -227,7 +227,7 @@ defineProperty(Response.prototype, "contentType", {
     get: function() {
         var type, charset, index;
 
-        if (this._contentType !== null) return this._contentType;
+        if (this._contentType != null) return this._contentType;
         type = this.getHeader("Content-Type");
 
         if (!type) {
@@ -238,6 +238,10 @@ defineProperty(Response.prototype, "contentType", {
             } else {
                 this._contentType = type.substring(0, index);
                 if ((charset = type.substring(index).split("=")[1])) this._charset = charset;
+            }
+
+            if ((index = (type = this._contentType).indexOf(","))) {
+                this._contentType = type.substring(0, index);
             }
         }
 
@@ -263,7 +267,7 @@ defineProperty(Response.prototype, "contentLength", {
     get: function() {
         var length;
 
-        if (this._contentLength !== null) return this._contentLength;
+        if (this._contentLength != null) return this._contentLength;
         length = +(this.getHeader("Content-Length"));
 
         if (length) {
