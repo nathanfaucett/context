@@ -125,7 +125,7 @@ defineProperty(Request.prototype, "contentType", {
                 if ((charset = type.substring(index).split("=")[1])) this._charset = charset;
             }
 
-            if ((index = (type = this._contentType).indexOf(","))) {
+            if ((index = (type = this._contentType).indexOf(",")) !== -1) {
                 this._contentType = type.substring(0, index);
             }
         }
