@@ -1,7 +1,7 @@
 var http = require("http"),
-    Response = module.exports = http.OutgoingMessage,
-    STATUS_CODES = http.STATUS_CODES;
-HttpError = require("http_error");
+    Response = module.exports = http.ServerResponse,
+    STATUS_CODES = http.STATUS_CODES,
+    HttpError = require("http_error");
 
 
 var JSONP_RESTRICT_CHARSET = /[^\[\]\w$.]/g,
