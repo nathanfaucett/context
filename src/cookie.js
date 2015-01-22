@@ -1,8 +1,8 @@
-var type = require("type");
+var isObject = require("is_object");
 
 
 function Cookie(name, value, unparsed, opts) {
-    if (type.isObject(unparsed)) {
+    if (isObject(unparsed)) {
         opts = unparsed;
         unparsed = null;
     }

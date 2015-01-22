@@ -2,7 +2,9 @@ var Request = module.exports = require("http").IncomingMessage,
     url = require("url"),
 
     qs = require("qs"),
-    type = require("type"),
+    isObject = require("is_object"),
+    isArray = require("is_array"),
+    isString = require("is_string"),
     mime = require("mime"),
     Cookie = require("./cookie");
 
@@ -69,10 +71,14 @@ Request.prototype.setHeader = function(name, value) {
 Request.prototype.setHeaders = function(values) {
     var headers, key;
 
-    if (!type.isObject(headers)) return this;
+    if (!isObject(headers)) {
+        return this;
+    }
     headers = this.headers;
 
-    for (key in values) headers[key.toLowerCase()] = values[key];
+    for (key in values) {
+        headers[key.toLowerCase()] = values[key];
+    }
     return this;
 };
 
@@ -261,11 +267,13 @@ Request.prototype.accepts = function(types) {
         accepts = [],
         typeObj, i, il;
 
-    types = type.isArray(types) ? types : (type.isString(types) ? types.split(SPLITER) : []);
+    types = isArray(types) ? types : (isString(types) ? types.split(SPLITER) : []);
 
     for (i = 0, il = types.length; i < il; i++) {
         typeObj = parseAccepts(types[i]);
-        if (acceptType(accept, typeObj)) accepts.push(typeObj.type);
+        if (acceptType(accept, typeObj)) {
+            accepts.push(typeObj.type);
+        }
     }
 
     return accepts;
@@ -276,11 +284,13 @@ Request.prototype.acceptsEncoding = function(types) {
         accepts = [],
         typeObj, i, il;
 
-    types = Array.isArray(types) ? types : types.split(SPLITER);
+    types = isArray(types) ? types : types.split(SPLITER);
 
     for (i = 0, il = types.length; i < il; i++) {
         typeObj = parseAccepts(types[i]);
-        if (acceptType(acceptEncoding, typeObj)) accepts.push(typeObj.type);
+        if (acceptType(acceptEncoding, typeObj)) {
+            accepts.push(typeObj.type);
+        }
     }
 
     return accepts;
@@ -291,11 +301,13 @@ Request.prototype.acceptsLanguage = function(types) {
         accepts = [],
         typeObj, i, il;
 
-    types = type.isArray(types) ? types : types.split(SPLITER);
+    types = isArray(types) ? types : types.split(SPLITER);
 
     for (i = 0, il = types.length; i < il; i++) {
         typeObj = parseAccepts(types[i]);
-        if (acceptType(acceptLanguage, typeObj)) accepts.push(typeObj.type);
+        if (acceptType(acceptLanguage, typeObj)) {
+            accepts.push(typeObj.type);
+        }
     }
 
     return accepts;
@@ -309,7 +321,9 @@ function parseAcceptTypes(headers) {
 
     while (i--) {
         typeObj = parseAccepts(types[i]);
-        if (typeObj.type === "*/*" || mime.lookUpExt(typeObj.type, false)) accepts.push(typeObj);
+        if (typeObj.type === "*/*" || mime.lookUpExt(typeObj.type, false)) {
+            accepts.push(typeObj);
+        }
     }
     accepts.sort(sortByQValue);
 
