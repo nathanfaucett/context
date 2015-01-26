@@ -20,6 +20,7 @@
     "grunt-jsbeautifier": ""
   },
   "dependencies": {
+    "cookie": "nathanfaucett/cookie",
     "http_error": "nathanfaucett/http_error",
     "mime": "nathanfaucett/mime",
     "qs": "git://github.com/nathanfaucett/qs",

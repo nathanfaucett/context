@@ -6,7 +6,7 @@ var Request = module.exports = require("http").IncomingMessage,
     isArray = require("is_array"),
     isString = require("is_string"),
     mime = require("mime"),
-    Cookie = require("./cookie");
+    Cookie = require("cookie");
 
 
 var SPLITER = /[, ]+/,
@@ -204,7 +204,9 @@ Request.prototype.cookie = function(name) {
         cookies = this._cookies || (this._cookies = {}),
         start, eq, cookie, unparsed, index, value;
 
-    if (cookies[name]) return cookies[name];
+    if (cookies[name]) {
+        return cookies[name];
+    }
 
     start = header.indexOf(name);
     eq = header.indexOf("=");
@@ -212,7 +214,10 @@ Request.prototype.cookie = function(name) {
 
     if (start !== -1 && eq !== -1) {
         index = header.substr(start).search(COLON_END);
-        if (index === -1) return cookie;
+
+        if (index === -1) {
+            return cookie;
+        }
 
         unparsed = header.substr(start, index);
         unparsed = unparsed.trim();
