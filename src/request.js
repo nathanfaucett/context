@@ -1,7 +1,7 @@
 var Request = module.exports = require("http").IncomingMessage,
-    url = require("url"),
+    urls = require("urls"),
 
-    qs = require("qs"),
+    has = require("has"),
     isObject = require("is_object"),
     isArray = require("is_array"),
     isString = require("is_string"),
@@ -9,13 +9,11 @@ var Request = module.exports = require("http").IncomingMessage,
     Cookie = require("cookie");
 
 
-var SPLITER = /[, ]+/,
-    COLON_END = /;|$/,
-    hasOwnProp = Object.prototype.hasOwnProperty;
+var SPLITER = /[, ]+/;
 
 
 function defineProperty(obj, prop, desc) {
-    if (!hasOwnProp.call(obj, prop)) {
+    if (!has(obj, prop)) {
         Object.defineProperty(obj, prop, desc);
     }
 }
@@ -23,10 +21,12 @@ function defineProperty(obj, prop, desc) {
 
 Request.prototype.init = function(res, config) {
     var headers = this.headers,
-        fullUrl = url.parse((this.protocol || (this.secure ? "https" : "http")) + "://" + headers.host + this.url, false, false),
+        fullUrl = urls.parse(
+            (this.protocol || (this.secure ? "https" : "http")) + "://" + headers.host + this.url,
+            true,
+            false
+        ),
         locals = res.locals || (res.locals = {});
-
-    fullUrl.query = qs.parse(fullUrl.query);
 
     this.res = this.response = res;
     this.config = config || {};
@@ -53,11 +53,15 @@ Request.prototype.param = function(name, defaultValue) {
         body = this.body,
         query = this.query;
 
-    if (params && params[name] != null) return params[name];
-    if (body && body[name] != null) return body[name];
-    if (query && query[name] != null) return query[name];
-
-    return defaultValue;
+    if (params && params[name] != null) {
+        return params[name];
+    } else if (body && body[name] != null) {
+        return body[name];
+    } else if (query && query[name] != null) {
+        return query[name];
+    } else {
+        return defaultValue;
+    }
 };
 
 Request.prototype.getHeader = Request.prototype.header = function(name) {
@@ -71,13 +75,14 @@ Request.prototype.setHeader = function(name, value) {
 Request.prototype.setHeaders = function(values) {
     var headers, key;
 
-    if (!isObject(headers)) {
-        return this;
-    }
-    headers = this.headers;
+    if (isObject(values)) {
+        headers = this.headers;
 
-    for (key in values) {
-        headers[key.toLowerCase()] = values[key];
+        for (key in values) {
+            if (has(values, key)) {
+                headers[key.toLowerCase()] = values[key];
+            }
+        }
     }
     return this;
 };
@@ -89,23 +94,27 @@ Request.prototype.deleteHeader = function(name) {
 
 Request.prototype.removeHeader = Request.prototype.deleteHeader;
 
-
 defineProperty(Request.prototype, "charset", {
     get: function() {
         var type, charset, index, tmp;
 
-        if (this._charset != null) return this._charset;
-        type = this.headers["content-type"];
-        charset = "utf-8";
+        if (this._charset != null) {
+            return this._charset;
+        } else {
+            type = this.headers["content-type"];
+            charset = "utf-8";
 
-        if (type && (index = type.indexOf(";")) !== -1) {
-            if ((tmp = type.substring(index).split("=")[1])) this._charset = tmp;
+            if (type && (index = type.indexOf(";")) !== -1) {
+                if ((tmp = type.substring(index).split("=")[1])) {
+                    this._charset = tmp;
+                }
+            }
+
+            return (this._charset = charset);
         }
-
-        return (this._charset = charset);
     },
     set: function(value) {
-        value || (value = "utf-8");
+        value = value || "utf-8";
 
         if (value !== this._charset) {
             this.headers["content-type"] = (this._contentType || this.contentType) + "; charset=" + value;
@@ -118,25 +127,30 @@ defineProperty(Request.prototype, "contentType", {
     get: function() {
         var type, charset, index;
 
-        if (this._contentType != null) return this._contentType;
-        type = this.headers["content-type"];
-
-        if (!type) {
-            this._contentType = "application/octet-stream";
+        if (this._contentType != null) {
+            return this._contentType;
         } else {
-            if ((index = type.indexOf(";")) === -1) {
-                this._contentType = type;
+            type = this.headers["content-type"];
+
+            if (!type) {
+                this._contentType = "application/octet-stream";
             } else {
-                this._contentType = type.substring(0, index);
-                if ((charset = type.substring(index).split("=")[1])) this._charset = charset;
+                if ((index = type.indexOf(";")) === -1) {
+                    this._contentType = type;
+                } else {
+                    this._contentType = type.substring(0, index);
+                    if ((charset = type.substring(index).split("=")[1])) {
+                        this._charset = charset;
+                    }
+                }
+
+                if ((index = (type = this._contentType).indexOf(",")) !== -1) {
+                    this._contentType = type.substring(0, index);
+                }
             }
 
-            if ((index = (type = this._contentType).indexOf(",")) !== -1) {
-                this._contentType = type.substring(0, index);
-            }
+            return this._contentType;
         }
-
-        return this._contentType;
     },
     set: function(value) {
         var charset = this._charset || (this._charset = "utf-8"),
@@ -146,7 +160,9 @@ defineProperty(Request.prototype, "contentType", {
             contentType = value;
         } else {
             contentType = value.substring(0, index);
-            if ((charset = value.substring(index).split("=")[1])) this._charset = charset;
+            if ((charset = value.substring(index).split("=")[1])) {
+                this._charset = charset;
+            }
         }
 
         this.headers["content-type"] = contentType + "; charset=" + this._charset;
@@ -158,16 +174,19 @@ defineProperty(Request.prototype, "contentLength", {
     get: function() {
         var length;
 
-        if (this._contentLength != null) return this._contentLength;
-        length = +(this.headers["content-length"]);
-
-        if (length) {
-            this._contentLength = length;
+        if (this._contentLength != null) {
+            return this._contentLength;
         } else {
-            this._contentLength = 0;
-        }
+            length = +(this.headers["content-length"]);
 
-        return this._contentLength;
+            if (length) {
+                this._contentLength = length;
+            } else {
+                this._contentLength = 0;
+            }
+
+            return this._contentLength;
+        }
     },
     set: function(value) {
         this._contentLength = this.headers["content-length"] = +value || 0;
@@ -176,6 +195,7 @@ defineProperty(Request.prototype, "contentLength", {
 
 defineProperty(Request.prototype, "version", {
     get: function() {
+        var headers = this.headers;
         return headers["accept-version"] || headers["x-api-version"] || "*";
     }
 });
@@ -200,43 +220,7 @@ defineProperty(Request.prototype, "secure", {
 });
 
 Request.prototype.cookie = function(name) {
-    var header = (this.headers.cookie || ""),
-        cookies = this._cookies || (this._cookies = {}),
-        start, eq, cookie, unparsed, index, value;
-
-    if (cookies[name]) {
-        return cookies[name];
-    }
-
-    start = header.indexOf(name);
-    eq = header.indexOf("=");
-    cookie = null;
-
-    if (start !== -1 && eq !== -1) {
-        index = header.substr(start).search(COLON_END);
-
-        if (index === -1) {
-            return cookie;
-        }
-
-        unparsed = header.substr(start, index);
-        unparsed = unparsed.trim();
-
-        if ((index = unparsed.indexOf("=")) !== -1) {
-            try {
-                name = decodeURIComponent(unparsed.substring(0, index));
-                value = decodeURIComponent(unparsed.substring(index + 1));
-            } catch (e) {
-                return cookie;
-            }
-        } else {
-            return cookie;
-        }
-
-        cookie = cookies[name] = new Cookie(name, value, unparsed);
-    }
-
-    return cookie;
+    return this.cookies()[name];
 };
 
 Request.prototype.cookies = function() {
@@ -245,26 +229,32 @@ Request.prototype.cookies = function() {
         i = header.length,
         unparsed, index, name, value;
 
-    while (i--) {
-        unparsed = header[i];
-        if (!unparsed) continue;
-        unparsed = unparsed.trim();
+    if (cookies) {
+        return cookies;
+    } else {
+        while (i--) {
+            unparsed = header[i];
 
-        if ((index = unparsed.indexOf("=")) !== -1) {
-            try {
-                name = decodeURIComponent(unparsed.substring(0, index));
-                value = decodeURIComponent(unparsed.substring(index + 1));
-            } catch (e) {
-                continue;
+            if (unparsed) {
+                unparsed = unparsed.trim();
+
+                if ((index = unparsed.indexOf("=")) !== -1) {
+                    try {
+                        name = decodeURIComponent(unparsed.substring(0, index));
+                        value = decodeURIComponent(unparsed.substring(index + 1));
+                    } catch (e) {
+                        continue;
+                    }
+                } else {
+                    continue;
+                }
+
+                cookies[name] = new Cookie(name, value, unparsed);
             }
-        } else {
-            continue;
         }
 
-        cookies[name] = new Cookie(name, value, unparsed);
+        return cookies;
     }
-
-    return cookies;
 };
 
 Request.prototype.accepts = function(types) {
@@ -386,7 +376,9 @@ function acceptType(accepts, typeObj) {
 
     while (i--) {
         value = accepts[i];
-        if (value.type === "*/*" || (typeObj.type === value.type && typeObj.q >= value.q)) return true;
+        if (value.type === "*/*" || (typeObj.type === value.type && typeObj.q >= value.q)) {
+            return true;
+        }
     }
 
     return false;

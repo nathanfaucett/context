@@ -17,15 +17,18 @@
   "devDependencies": {
     "grunt": "",
     "grunt-contrib-jshint": "^0.10.0",
-    "grunt-jsbeautifier": ""
+    "grunt-jsbeautifier": "",
+    "mocha": "^2.1.0",
+    "request": "git://github.com/nathanfaucett/request"
   },
   "dependencies": {
     "cookie": "nathanfaucett/cookie",
+    "has": "git://github.com/nathanfaucett/has",
     "http_error": "nathanfaucett/http_error",
-    "mime": "nathanfaucett/mime",
-    "qs": "git://github.com/nathanfaucett/qs",
-    "is_object": "nathanfaucett/is_object",
     "is_array": "nathanfaucett/is_array",
-    "is_string": "nathanfaucett/is_string"
+    "is_object": "nathanfaucett/is_object",
+    "is_string": "nathanfaucett/is_string",
+    "mime": "nathanfaucett/mime",
+    "urls": "git://github.com/nathanfaucett/urls"
   }
 }

@@ -1,4 +1,6 @@
 var http = require("http"),
+    has = require("has"),
+    isObject = require("is_object"),
     Response = module.exports = http.ServerResponse,
     STATUS_CODES = http.STATUS_CODES,
     HttpError = require("http_error");
@@ -6,12 +8,11 @@ var http = require("http"),
 
 var JSONP_RESTRICT_CHARSET = /[^\[\]\w$.]/g,
     LINE_U2028 = /\u2028/g,
-    PARAGRAPH_U2028 = /\u2028/g,
-    hasOwnProp = Object.prototype.hasOwnProperty;
+    PARAGRAPH_U2028 = /\u2028/g;
 
 
 function defineProperty(obj, prop, desc) {
-    if (!hasOwnProp.call(obj, prop)) {
+    if (!has(obj, prop)) {
         Object.defineProperty(obj, prop, desc);
     }
 }
@@ -61,15 +62,21 @@ Response.prototype.send = function(code, body, headers) {
 
     if (body) {
         if (Buffer.isBuffer(body)) {
-            if (!contentType) contentType = "application/octet-stream";
+            if (!contentType) {
+                contentType = "application/octet-stream";
+            }
             this.setHeader("Content-Length", body.length);
         } else {
             if (typeof(body) === "object") {
                 body = this.JSONstringify(body);
-                if (!contentType) contentType = "application/json";
+                if (!contentType) {
+                    contentType = "application/json";
+                }
             } else {
                 body = body.toString(this.charset);
-                if (!contentType) contentType = "text/html";
+                if (!contentType) {
+                    contentType = "text/html";
+                }
             }
             this.setHeader("Content-Length", Buffer.byteLength(body, this.charset));
         }
@@ -81,12 +88,16 @@ Response.prototype.send = function(code, body, headers) {
         body = "Not Acceptable";
     }
     this.contentType = contentType;
-    if (headers) this.setHeaders(headers);
+    if (headers) {
+        this.setHeaders(headers);
+    }
 
     this.emit("send", code, body, headers);
 
     this.writeHead(this.statusCode);
-    if (body && !(isHead || code === 204 || code === 304)) this.write(body, this.charset);
+    if (body && !(isHead || code === 204 || code === 304)) {
+        this.write(body, this.charset);
+    }
 
     return this.end();
 };
@@ -106,7 +117,7 @@ Response.prototype.json = function(code, obj) {
 };
 
 Response.prototype.jsonp = function(code, obj) {
-    var body, callback;
+    var body, callback, callbackName;
 
     if (typeof(code) !== "number") {
         callbackName = obj;
@@ -133,7 +144,9 @@ Response.prototype.jsonp = function(code, obj) {
 
 Response.prototype.location = function(url) {
 
-    if (url === "back") url = this.request.getHeader("referrer") || "/";
+    if (url === "back") {
+        url = this.request.getHeader("referrer") || "/";
+    }
     this.setHeader("Location", url);
 
     return this;
@@ -202,19 +215,23 @@ defineProperty(Response.prototype, "charset", {
     get: function() {
         var type, charset, index, tmp;
 
-        if (this._charset != null) return this._charset;
+        if (this._charset != null) {
+            return this._charset;
+        }
 
         type = this.getHeader("Content-Type");
         charset = "utf-8";
 
         if (type && (index = type.indexOf(";")) !== -1) {
-            if ((tmp = type.substring(index).split("=")[1])) this._charset = tmp;
+            if ((tmp = type.substring(index).split("=")[1])) {
+                this._charset = tmp;
+            }
         }
 
         return (this._charset = charset);
     },
     set: function(value) {
-        value || (value = "utf-8");
+        value = value || "utf-8";
 
         if (value !== this._charset) {
             this.setHeader("Content-Type", (this._contentType || this.contentType) + "; charset=" + value);
@@ -227,7 +244,9 @@ defineProperty(Response.prototype, "contentType", {
     get: function() {
         var type, charset, index;
 
-        if (this._contentType != null) return this._contentType;
+        if (this._contentType != null) {
+            return this._contentType;
+        }
         type = this.getHeader("Content-Type");
 
         if (!type) {
@@ -237,7 +256,9 @@ defineProperty(Response.prototype, "contentType", {
                 this._contentType = type;
             } else {
                 this._contentType = type.substring(0, index);
-                if ((charset = type.substring(index).split("=")[1])) this._charset = charset;
+                if ((charset = type.substring(index).split("=")[1])) {
+                    this._charset = charset;
+                }
             }
 
             if ((index = (type = this._contentType).indexOf(",")) !== -1) {
@@ -255,7 +276,9 @@ defineProperty(Response.prototype, "contentType", {
             contentType = value;
         } else {
             contentType = value.substring(0, index);
-            if ((charset = value.substring(index).split("=")[1])) this._charset = charset;
+            if ((charset = value.substring(index).split("=")[1])) {
+                this._charset = charset;
+            }
         }
 
         this.setHeader("Content-Type", contentType + "; charset=" + this._charset);
@@ -267,7 +290,9 @@ defineProperty(Response.prototype, "contentLength", {
     get: function() {
         var length;
 
-        if (this._contentLength != null) return this._contentLength;
+        if (this._contentLength != null) {
+            return this._contentLength;
+        }
         length = +(this.getHeader("Content-Length"));
 
         if (length) {
@@ -293,12 +318,17 @@ defineProperty(Response.prototype, "sent", {
 
 Response.prototype.setHeaders = function(values) {
     var key;
-    if (!type.isObject(values)) return this;
-    for (key in values) this.setHeader(key, values[key]);
+    if (!isObject(values)) {
+        for (key in values) {
+            if (has) {
+                this.setHeader(key, values[key]);
+            }
+        }
+    }
     return this;
 };
 
-if (!hasOwnProp.call(Response.prototype, "nativeWrite")) {
+if (!has(Response.prototype, "nativeWrite")) {
     Response.prototype.nativeWrite = Response.prototype.write;
 
     Response.prototype.write = function(chunk, encoding) {
@@ -308,11 +338,11 @@ if (!hasOwnProp.call(Response.prototype, "nativeWrite")) {
     };
 }
 
-if (!hasOwnProp.call(Response.prototype, "nativeWriteHead")) {
+if (!has(Response.prototype, "nativeWriteHead")) {
     Response.prototype.nativeWriteHead = Response.prototype.writeHead;
 
     Response.prototype.writeHead = function(statusCode, reasonPhrase, headers) {
-        statusCode || (statusCode = this.statusCode);
+        statusCode = statusCode || this.statusCode;
         this.emit("header", statusCode, reasonPhrase, headers);
 
         if (statusCode === 204 || statusCode === 304) {
@@ -326,12 +356,11 @@ if (!hasOwnProp.call(Response.prototype, "nativeWriteHead")) {
     };
 }
 
-if (!hasOwnProp.call(Response.prototype, "nativeEnd")) {
+if (!has(Response.prototype, "nativeEnd")) {
     Response.prototype.nativeEnd = Response.prototype.end;
 
     Response.prototype.end = function(data, encoding) {
         this.emit("end", data, encoding);
-
         return this.nativeEnd(data, encoding);
     };
 }
