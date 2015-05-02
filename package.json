@@ -22,13 +22,14 @@
     "request": "git://github.com/nathanfaucett/request"
   },
   "dependencies": {
-    "cookie": "nathanfaucett/cookie",
+    "cookie": "git://github.com/nathanfaucett/cookie",
+    "escape_text_content": "git://github.com/nathanfaucett/escape_text_content",
     "has": "git://github.com/nathanfaucett/has",
-    "http_error": "nathanfaucett/http_error",
-    "is_array": "nathanfaucett/is_array",
-    "is_object": "nathanfaucett/is_object",
-    "is_string": "nathanfaucett/is_string",
-    "mime": "nathanfaucett/mime",
+    "http_error": "git://github.com/nathanfaucett/http_error",
+    "is_array": "git://github.com/nathanfaucett/is_array",
+    "is_object": "git://github.com/nathanfaucett/is_object",
+    "is_string": "git://github.com/nathanfaucett/is_string",
+    "mime": "git://github.com/nathanfaucett/mime",
     "urls": "git://github.com/nathanfaucett/urls"
   }
 }

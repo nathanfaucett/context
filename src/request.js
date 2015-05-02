@@ -1,22 +1,16 @@
-var Request = module.exports = require("http").IncomingMessage,
+var http = require("http"),
     urls = require("urls"),
-
     has = require("has"),
     isObject = require("is_object"),
     isArray = require("is_array"),
     isString = require("is_string"),
     mime = require("mime"),
-    Cookie = require("cookie");
+    Cookie = require("cookie"),
+    safeDefineProperty = require("./safe_define_property");
 
 
-var SPLITER = /[, ]+/;
-
-
-function defineProperty(obj, prop, desc) {
-    if (!has(obj, prop)) {
-        Object.defineProperty(obj, prop, desc);
-    }
-}
+var Request = module.exports = http.IncomingMessage,
+    SPLITER = /[, ]+/;
 
 
 Request.prototype.init = function(res, config) {
@@ -94,7 +88,7 @@ Request.prototype.deleteHeader = function(name) {
 
 Request.prototype.removeHeader = Request.prototype.deleteHeader;
 
-defineProperty(Request.prototype, "charset", {
+safeDefineProperty(Request.prototype, "charset", {
     get: function() {
         var type, charset, index, tmp;
 
@@ -123,7 +117,7 @@ defineProperty(Request.prototype, "charset", {
     }
 });
 
-defineProperty(Request.prototype, "contentType", {
+safeDefineProperty(Request.prototype, "contentType", {
     get: function() {
         var type, charset, index;
 
@@ -170,7 +164,7 @@ defineProperty(Request.prototype, "contentType", {
     }
 });
 
-defineProperty(Request.prototype, "contentLength", {
+safeDefineProperty(Request.prototype, "contentLength", {
     get: function() {
         var length;
 
@@ -193,27 +187,27 @@ defineProperty(Request.prototype, "contentLength", {
     }
 });
 
-defineProperty(Request.prototype, "version", {
+safeDefineProperty(Request.prototype, "version", {
     get: function() {
         var headers = this.headers;
         return headers["accept-version"] || headers["x-api-version"] || "*";
     }
 });
 
-defineProperty(Request.prototype, "protocol", {
+safeDefineProperty(Request.prototype, "protocol", {
     get: function() {
         return this.connection.encrypted ? "https" : "http";
     }
 });
 
-defineProperty(Request.prototype, "xhr", {
+safeDefineProperty(Request.prototype, "xhr", {
     get: function() {
         var xhr = this.headers["x-requested-with"];
         return xhr ? xhr.toLowerCase() === "xmlhttprequest" : false;
     }
 });
 
-defineProperty(Request.prototype, "secure", {
+safeDefineProperty(Request.prototype, "secure", {
     get: function() {
         return this.protocol === "https";
     }
