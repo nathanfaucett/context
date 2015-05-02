@@ -1,9 +1,5 @@
+test
 node_modules
-node_modules/*
-node_modules/**/*
 npm-debug.log
-examples
-examples/*
-examples/**/*
 .npmignore
 .gitignore
