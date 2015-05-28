@@ -25,8 +25,6 @@ Response.prototype.init = function(req, config) {
     this.req = this.request = req;
     this.config = config || {};
 
-    this.locals = this.locals || {};
-
     return this;
 };
 

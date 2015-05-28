@@ -19,8 +19,7 @@ Request.prototype.init = function(res, config) {
             (this.protocol || (this.secure ? "https" : "http")) + "://" + headers.host + this.url,
             true,
             false
-        ),
-        locals = res.locals || (res.locals = {});
+        );
 
     this.res = this.response = res;
     this.config = config || {};
@@ -31,9 +30,6 @@ Request.prototype.init = function(res, config) {
 
     headers.referer = headers.referrer = (headers.referer || headers.referrer || "");
     this.locale = (headers["accept-language"] || "").split(SPLITER)[0].split("-")[0] || "en";
-
-    locals.locale = this.locale;
-    locals.referer = this.referer;
 
     this.accept = parseAcceptTypes(headers);
     this.acceptLanguage = parseAcceptLanguages(headers);
