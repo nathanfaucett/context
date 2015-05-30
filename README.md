@@ -1,7 +1,7 @@
-Context
+ri
 =======
 
-response and request helpers
+request and response interface
 
 
 ```javascript

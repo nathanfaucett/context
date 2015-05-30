@@ -1,12 +1,12 @@
 var assert = require("assert"),
     http = require("http"),
     request = require("request"),
-    context = require("../src/index");
+    ri = require("../src/index");
 
 
 function createServer(callback) {
     var server = new http.Server(function(req, res) {
-        context.init(req, res);
+        ri.init(req, res);
 
         if (callback) {
             callback(req, res);

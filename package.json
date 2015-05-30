@@ -1,15 +1,18 @@
 {
-  "name": "context",
+  "name": "ri",
   "version": "0.0.1",
-  "description": "response and request helpers",
+  "description": "request and response interface",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nathanfaucett/context.git"
+    "url": "https://github.com/nathanfaucett/ri.git"
   },
   "main": "src/index.js",
+  "scripts": {
+    "test": "mocha"
+  },
   "keywords": [
-    "context",
-    "context.js"
+    "ri",
+    "ri.js"
   ],
   "author": "Nathan Faucett",
   "license": "BSD-2-Clause",

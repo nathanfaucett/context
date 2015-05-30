@@ -1,11 +1,11 @@
-var context = exports;
+var ri = exports;
 
 
-context.Request = require("./request");
-context.Response = require("./response");
+ri.Request = require("./request");
+ri.Response = require("./response");
 
 
-context.init = function(req, res, config) {
+ri.init = function(req, res, config) {
     res.init(req, config);
     req.init(res, config);
 };
