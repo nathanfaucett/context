@@ -3,7 +3,7 @@ var http = require("http"),
     isObject = require("is_object"),
     escapeTextContent = require("escape_text_content"),
     HttpError = require("http_error"),
-    safeDefineProperty = require("./safe_define_property");
+    safeDefineProperty = require("./safeDefineProperty");
 
 
 var Response = module.exports = http.ServerResponse,

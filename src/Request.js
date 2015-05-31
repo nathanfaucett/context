@@ -1,13 +1,12 @@
 var http = require("http"),
     urls = require("urls"),
     has = require("has"),
-    trim = require("trim"),
     isObject = require("is_object"),
     isArray = require("is_array"),
     isString = require("is_string"),
     mime = require("mime"),
-    Cookie = require("cookie"),
-    safeDefineProperty = require("./safe_define_property");
+    parseCookies = require("./parseCookies"),
+    safeDefineProperty = require("./safeDefineProperty");
 
 
 var Request = module.exports = http.IncomingMessage,
@@ -215,39 +214,7 @@ Request.prototype.cookie = function(name) {
 };
 
 Request.prototype.cookies = function() {
-    var header = (this.headers.cookie || "").split(";"),
-        cookies = this._cookies,
-        i = header.length,
-        unparsed, index, name, value;
-
-    if (cookies) {
-        return cookies;
-    } else {
-        this._cookies = cookies = {};
-
-        while (i--) {
-            unparsed = header[i];
-
-            if (unparsed) {
-                unparsed = trim(unparsed);
-
-                if ((index = unparsed.indexOf("=")) !== -1) {
-                    try {
-                        name = decodeURIComponent(unparsed.substring(0, index));
-                        value = decodeURIComponent(unparsed.substring(index + 1));
-                    } catch (e) {
-                        continue;
-                    }
-                } else {
-                    continue;
-                }
-
-                cookies[name] = new Cookie(name, value, unparsed);
-            }
-        }
-
-        return cookies;
-    }
+    return this._cookies ? this._cookies : (this._cookies = parseCookies(this.headers.cookie));
 };
 
 Request.prototype.accepts = function(types) {

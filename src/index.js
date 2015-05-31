@@ -1,8 +1,10 @@
 var ri = exports;
 
 
-ri.Request = require("./request");
-ri.Response = require("./response");
+ri.Request = require("./Request");
+ri.Response = require("./Response");
+
+ri.parseCookies = require("./parseCookies");
 
 
 ri.init = function(req, res, config) {
