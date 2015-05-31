@@ -34,6 +34,7 @@ function makeRequest(done) {
 }
 
 describe("#Request", function() {
+
     describe("#param(name : String)", function() {
         it("it should return param from request object", function(done) {
             createServer(function(req) {
@@ -48,7 +49,6 @@ describe("#Request", function() {
         it("it should return charset from request object", function(done) {
             createServer(function(req) {
                 assert(req.charset === "utf-8");
-                assert(req.charset === "utf-8");
             });
 
             makeRequest(done);
@@ -59,7 +59,6 @@ describe("#Request", function() {
         it("it should return Content Type from request object", function(done) {
             createServer(function(req) {
                 assert(req.contentType === "application/json");
-                assert(req.contentType === "application/json");
             });
 
             makeRequest(done);
@@ -69,7 +68,6 @@ describe("#Request", function() {
     describe("#contentLength", function() {
         it("it should return Content Length from request object", function(done) {
             createServer(function(req) {
-                assert(req.contentLength === 0);
                 assert(req.contentLength === 0);
             });
 
