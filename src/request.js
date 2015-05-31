@@ -1,6 +1,7 @@
 var http = require("http"),
     urls = require("urls"),
     has = require("has"),
+    trim = require("trim"),
     isObject = require("is_object"),
     isArray = require("is_array"),
     isString = require("is_string"),
@@ -215,18 +216,20 @@ Request.prototype.cookie = function(name) {
 
 Request.prototype.cookies = function() {
     var header = (this.headers.cookie || "").split(";"),
-        cookies = this._cookies || (this._cookies = {}),
+        cookies = this._cookies,
         i = header.length,
         unparsed, index, name, value;
 
     if (cookies) {
         return cookies;
     } else {
+        this._cookies = cookies = {};
+
         while (i--) {
             unparsed = header[i];
 
             if (unparsed) {
-                unparsed = unparsed.trim();
+                unparsed = trim(unparsed);
 
                 if ((index = unparsed.indexOf("=")) !== -1) {
                     try {

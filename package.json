@@ -25,6 +25,7 @@
     "request": "git://github.com/nathanfaucett/request"
   },
   "dependencies": {
+    "trim": "git://github.com/nathanfaucett/trim",
     "cookie": "git://github.com/nathanfaucett/cookie",
     "escape_text_content": "git://github.com/nathanfaucett/escape_text_content",
     "has": "git://github.com/nathanfaucett/has",
