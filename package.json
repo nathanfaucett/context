@@ -8,7 +8,9 @@
   },
   "main": "src/index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "npm run test-node",
+    "test-node": "node ./test | ./node_modules/.bin/tap-spec",
+    "test-node-raw": "node ./test"
   },
   "keywords": [
     "ri",
@@ -18,22 +20,24 @@
   "license": "BSD-2-Clause",
   "readmeFilename": "README.md",
   "devDependencies": {
-    "grunt": "",
-    "grunt-contrib-jshint": "^0.10.0",
-    "grunt-jsbeautifier": "",
-    "mocha": "^2.1.0",
-    "request": "git://github.com/nathanfaucett/request"
+    "grunt": "^0.4.5",
+    "grunt-contrib-jshint": "^0.11.3",
+    "grunt-jsbeautifier": "^0.2.10",
+    "tap-spec": "^4.1.0",
+    "tape": "^4.2.0",
+    "zuul": "^3.6.0",
+    "request": "git://github.com/nathanfaucett/request.git"
   },
   "dependencies": {
-    "trim": "git://github.com/nathanfaucett/trim",
-    "cookie": "git://github.com/nathanfaucett/cookie",
-    "escape_text_content": "git://github.com/nathanfaucett/escape_text_content",
-    "has": "git://github.com/nathanfaucett/has",
-    "http_error": "git://github.com/nathanfaucett/http_error",
-    "is_array": "git://github.com/nathanfaucett/is_array",
-    "is_object": "git://github.com/nathanfaucett/is_object",
-    "is_string": "git://github.com/nathanfaucett/is_string",
-    "mime": "git://github.com/nathanfaucett/mime",
-    "urls": "git://github.com/nathanfaucett/urls"
+    "trim": "git://github.com/nathanfaucett/trim.git",
+    "cookie": "git://github.com/nathanfaucett/cookie.git",
+    "escape_text_content": "git://github.com/nathanfaucett/escape_text_content.git",
+    "has": "git://github.com/nathanfaucett/has.git",
+    "http_error": "git://github.com/nathanfaucett/http_error.git",
+    "is_array": "git://github.com/nathanfaucett/is_array.git",
+    "is_object": "git://github.com/nathanfaucett/is_object.git",
+    "is_string": "git://github.com/nathanfaucett/is_string.git",
+    "mime": "git://github.com/nathanfaucett/mime.git",
+    "urls": "git://github.com/nathanfaucett/urls.git"
   }
 }

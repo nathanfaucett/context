@@ -1,7 +1,7 @@
-var assert = require("assert"),
+var tape = require("tape"),
     http = require("http"),
     request = require("request"),
-    ri = require("../src/index");
+    ri = require("..");
 
 
 function createServer(callback) {
@@ -15,11 +15,11 @@ function createServer(callback) {
         server.close();
     });
 
-    server.listen(8080);
+    server.listen(9999);
 }
 
 function makeRequest(done) {
-    request.get("http://localhost:8080/time?id=1", {
+    request.get("http://localhost:9999/time?id=1", {
         headers: {
             "Content-Type": "application/json",
             "Content-Length": "0"
@@ -33,45 +33,34 @@ function makeRequest(done) {
     });
 }
 
-describe("#Request", function() {
-
-    describe("#param(name : String)", function() {
-        it("it should return param from request object", function(done) {
-            createServer(function(req) {
-                assert(req.param("id") === 1);
-            });
-
-            makeRequest(done);
-        });
+tape("Request #param(name : String) - it should return param from request object", function(assert) {
+    createServer(function(req) {
+        assert.equal(req.param("id"), 1);
     });
 
-    describe("#charset", function() {
-        it("it should return charset from request object", function(done) {
-            createServer(function(req) {
-                assert(req.charset === "utf-8");
-            });
+    makeRequest(assert.end);
+});
 
-            makeRequest(done);
-        });
+tape("Request #charset - it should return charset from request object", function(assert) {
+    createServer(function(req) {
+        assert.equal(req.charset, "utf-8");
     });
 
-    describe("#contentType", function() {
-        it("it should return Content Type from request object", function(done) {
-            createServer(function(req) {
-                assert(req.contentType === "application/json");
-            });
+    makeRequest(assert.end);
+});
 
-            makeRequest(done);
-        });
+tape("Request #contentType - it should return Content Type from request object", function(assert) {
+    createServer(function(req) {
+        assert.equal(req.contentType, "application/json");
     });
 
-    describe("#contentLength", function() {
-        it("it should return Content Length from request object", function(done) {
-            createServer(function(req) {
-                assert(req.contentLength === 0);
-            });
+    makeRequest(assert.end);
+});
 
-            makeRequest(done);
-        });
+tape("Request #contentLength - it should return Content Length from request object", function(assert) {
+    createServer(function(req) {
+        assert.equal(req.contentLength, 0);
     });
+
+    makeRequest(assert.end);
 });
