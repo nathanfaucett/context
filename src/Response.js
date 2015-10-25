@@ -35,7 +35,7 @@ Response.prototype.JSONstringify = function(body) {
 
 Response.prototype.send = function(code, body, headers) {
     var isHead = this.request.method === "HEAD",
-        contentType = (headers && (headers["content-type"] || headers["Content-Type"])) || this.contentType;
+        contentType = (headers && (headers["content-type"] || headers["Content-Type"])) || this._contentType;
 
     if (code instanceof Error) {
         if (code instanceof HttpError) {

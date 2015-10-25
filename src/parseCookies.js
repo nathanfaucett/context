@@ -1,5 +1,5 @@
 var trim = require("trim"),
-    Cookie = require("cookie");
+    parseCookie = require("./parseCookie");
 
 
 module.exports = parseCookies;
@@ -9,26 +9,18 @@ function parseCookies(cookie) {
     var cookies = {},
         header = (cookie || "").split(";"),
         i = header.length,
-        unparsed, index, name, value;
+        unparsed, value;
 
     while (i--) {
         unparsed = header[i];
 
         if (unparsed) {
             unparsed = trim(unparsed);
+            value = parseCookie(unparsed);
 
-            if ((index = unparsed.indexOf("=")) !== -1) {
-                try {
-                    name = decodeURIComponent(unparsed.substring(0, index));
-                    value = decodeURIComponent(unparsed.substring(index + 1));
-                } catch (e) {
-                    continue;
-                }
-            } else {
-                continue;
+            if (value) {
+                cookies[name] = value;
             }
-
-            cookies[name] = new Cookie(name, value, unparsed);
         }
     }
 
