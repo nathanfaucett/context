@@ -1,8 +1,9 @@
 var http = require("http"),
-    has = require("has"),
-    isObject = require("is_object"),
-    escapeTextContent = require("escape_text_content"),
-    HttpError = require("http_error"),
+    has = require("@nathanfaucett/has"),
+    isString = require("@nathanfaucett/is_string"),
+    isObject = require("@nathanfaucett/is_object"),
+    escapeTextContent = require("@nathanfaucett/escape_text_content"),
+    HttpError = require("@nathanfaucett/http_error"),
     safeDefineProperty = require("./safeDefineProperty");
 
 
@@ -35,7 +36,7 @@ Response.prototype.JSONstringify = function(body) {
 
 Response.prototype.send = function(code, body, headers) {
     var isHead = this.request.method === "HEAD",
-        contentType = (headers && (headers["content-type"] || headers["Content-Type"])) || this._contentType;
+        contentType = (headers && (headers["content-type"] || headers["Content-Type"])) || this.__contentType;
 
     if (code instanceof Error) {
         if (code instanceof HttpError) {
@@ -125,7 +126,7 @@ Response.prototype.jsonp = function(code, obj) {
     this.contentType = "application/json";
     this.charset = "utf-8";
 
-    if (typeof(callback) === "string" && callback.length !== 0) {
+    if (isString(callback) && callback.length !== 0) {
         callback = callback.replace(JSONP_RESTRICT_CHARSET, "");
 
         body = body.replace(LINE_U2028, "\\u2028").replace(PARAGRAPH_U2028, "\\u2029");
@@ -149,7 +150,7 @@ Response.prototype.redirect = function redirect(status, url) {
     var contentType = this.contentType,
         body, u;
 
-    if (typeof(status) === "string") {
+    if (isString(status)) {
         url = status;
         status = 302;
     }
@@ -181,7 +182,7 @@ Response.prototype.redirect = function redirect(status, url) {
 };
 
 Response.prototype.setCookie = function(cookie) {
-    if (typeof(cookie) !== "string") {
+    if (!isString(cookie)) {
         cookie = cookie.toString();
     }
 
@@ -208,29 +209,29 @@ safeDefineProperty(Response.prototype, "charset", {
     get: function() {
         var type, charset, index, tmp;
 
-        if (this._charset != null) {
-            return this._charset;
+        if (this.__charset != null) {
+            return this.__charset;
         } else {
             type = this.getHeader("Content-Type");
             charset = "utf-8";
 
             if (type && (index = type.indexOf(";")) !== -1) {
                 if ((tmp = type.substring(index).split("=")[1])) {
-                    this._charset = tmp;
+                    this.__charset = tmp;
                 }
             }
 
-            return (this._charset = charset);
+            return (this.__charset = charset);
         }
     },
     set: function(value) {
         value = value || "utf-8";
 
-        if (value !== this._charset) {
-            this.setHeader("Content-Type", (this._contentType || this.contentType) + "; charset=" + value);
+        if (value !== this.__charset) {
+            this.setHeader("Content-Type", (this.__contentType || this.contentType) + "; charset=" + value);
         }
 
-        this._charset = value;
+        this.__charset = value;
     }
 });
 
@@ -238,33 +239,33 @@ safeDefineProperty(Response.prototype, "contentType", {
     get: function() {
         var type, charset, index;
 
-        if (this._contentType != null) {
-            return this._contentType;
+        if (this.__contentType != null) {
+            return this.__contentType;
         } else {
             type = this.getHeader("Content-Type");
 
             if (!type) {
-                this._contentType = "application/octet-stream";
+                this.__contentType = "application/octet-stream";
             } else {
                 if ((index = type.indexOf(";")) === -1) {
-                    this._contentType = type;
+                    this.__contentType = type;
                 } else {
-                    this._contentType = type.substring(0, index);
+                    this.__contentType = type.substring(0, index);
                     if ((charset = type.substring(index).split("=")[1])) {
-                        this._charset = charset;
+                        this.__charset = charset;
                     }
                 }
 
-                if ((index = (type = this._contentType).indexOf(",")) !== -1) {
-                    this._contentType = type.substring(0, index);
+                if ((index = (type = this.__contentType).indexOf(",")) !== -1) {
+                    this.__contentType = type.substring(0, index);
                 }
             }
 
-            return this._contentType;
+            return this.__contentType;
         }
     },
     set: function(value) {
-        var charset = this._charset || (this._charset = "utf-8"),
+        var charset = this.__charset || (this.__charset = "utf-8"),
             contentType, index;
 
         if ((index = value.indexOf(";")) === -1) {
@@ -272,12 +273,12 @@ safeDefineProperty(Response.prototype, "contentType", {
         } else {
             contentType = value.substring(0, index);
             if ((charset = value.substring(index).split("=")[1])) {
-                this._charset = charset;
+                this.__charset = charset;
             }
         }
 
-        this.setHeader("Content-Type", contentType + "; charset=" + this._charset);
-        this._contentType = contentType;
+        this.setHeader("Content-Type", contentType + "; charset=" + this.__charset);
+        this.__contentType = contentType;
     }
 });
 
@@ -285,30 +286,30 @@ safeDefineProperty(Response.prototype, "contentLength", {
     get: function() {
         var length;
 
-        if (this._contentLength != null) {
-            return this._contentLength;
+        if (this.__contentLength != null) {
+            return this.__contentLength;
         } else {
             length = +(this.getHeader("Content-Length"));
 
             if (length) {
-                this._contentLength = length;
+                this.__contentLength = length;
             } else {
-                this._contentLength = 0;
+                this.__contentLength = 0;
             }
 
-            return this._contentLength;
+            return this.__contentLength;
         }
     },
     set: function(value) {
         value = +value || 0;
         this.setHeader("Content-Length", value);
-        this._contentLength = value;
+        this.__contentLength = value;
     }
 });
 
 safeDefineProperty(Response.prototype, "sent", {
     get: function() {
-        return !!this._header;
+        return !!this.__header;
     }
 });
 

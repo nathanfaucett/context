@@ -1,4 +1,4 @@
-var Cookie = require("cookie");
+var Cookie = require("@nathanfaucett/cookie");
 
 
 module.exports = parseCookie;

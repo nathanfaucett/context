@@ -1,6 +1,6 @@
 var tape = require("tape"),
     http = require("http"),
-    request = require("request"),
+    request = require("@nathanfaucett/request"),
     ri = require("..");
 
 

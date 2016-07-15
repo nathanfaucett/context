@@ -1,4 +1,4 @@
-var trim = require("trim"),
+var trim = require("@nathanfaucett/trim"),
     parseCookie = require("./parseCookie");
 
 

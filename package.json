@@ -1,5 +1,5 @@
 {
-  "name": "ri",
+  "name": "@nathanfaucett/ri",
   "version": "0.0.1",
   "description": "request and response interface",
   "repository": {
@@ -20,24 +20,24 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-contrib-jshint": "^0.11.3",
-    "grunt-jsbeautifier": "^0.2.10",
+    "grunt": "^1.0.1",
+    "grunt-contrib-jshint": "^1.0.0",
+    "grunt-jsbeautifier": "^0.2.13",
     "tap-spec": "^4.1.0",
     "tape": "^4.2.0",
     "zuul": "^3.6.0",
-    "request": "git://github.com/nathanfaucett/request.git"
+    "@nathanfaucett/request": "^0.0.2"
   },
   "dependencies": {
-    "trim": "git://github.com/nathanfaucett/trim.git",
-    "cookie": "git://github.com/nathanfaucett/cookie.git",
-    "escape_text_content": "git://github.com/nathanfaucett/escape_text_content.git",
-    "has": "git://github.com/nathanfaucett/has.git",
-    "http_error": "git://github.com/nathanfaucett/http_error.git",
-    "is_array": "git://github.com/nathanfaucett/is_array.git",
-    "is_object": "git://github.com/nathanfaucett/is_object.git",
-    "is_string": "git://github.com/nathanfaucett/is_string.git",
-    "mime": "git://github.com/nathanfaucett/mime.git",
-    "urls": "git://github.com/nathanfaucett/urls.git"
+    "@nathanfaucett/cookie": "^0.0.1",
+    "@nathanfaucett/escape_text_content": "^0.0.1",
+    "@nathanfaucett/has": "^0.0.1",
+    "@nathanfaucett/http_error": "^0.0.1",
+    "@nathanfaucett/is_array": "^0.0.1",
+    "@nathanfaucett/is_object": "^0.0.1",
+    "@nathanfaucett/is_string": "^0.0.1",
+    "@nathanfaucett/mime": "^0.0.1",
+    "@nathanfaucett/trim": "^0.0.1",
+    "@nathanfaucett/urls": "^0.0.2"
   }
 }

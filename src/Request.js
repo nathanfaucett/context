@@ -1,10 +1,11 @@
 var http = require("http"),
-    urls = require("urls"),
-    has = require("has"),
-    isObject = require("is_object"),
-    isArray = require("is_array"),
-    isString = require("is_string"),
-    mime = require("mime"),
+    urls = require("@nathanfaucett/urls"),
+    has = require("@nathanfaucett/has"),
+    isString = require("@nathanfaucett/is_string"),
+    isObject = require("@nathanfaucett/is_object"),
+    isArray = require("@nathanfaucett/is_array"),
+    isString = require("@nathanfaucett/is_string"),
+    mime = require("@nathanfaucett/mime"),
     parseCookies = require("./parseCookies"),
     safeDefineProperty = require("./safeDefineProperty");
 
@@ -88,28 +89,28 @@ safeDefineProperty(Request.prototype, "charset", {
     get: function() {
         var type, charset, index, tmp;
 
-        if (this._charset != null) {
-            return this._charset;
+        if (this.__charset != null) {
+            return this.__charset;
         } else {
             type = this.headers["content-type"];
             charset = "utf-8";
 
             if (type && (index = type.indexOf(";")) !== -1) {
                 if ((tmp = type.substring(index).split("=")[1])) {
-                    this._charset = tmp;
+                    this.__charset = tmp;
                 }
             }
 
-            return (this._charset = charset);
+            return (this.__charset = charset);
         }
     },
     set: function(value) {
         value = value || "utf-8";
 
-        if (value !== this._charset) {
-            this.headers["content-type"] = (this._contentType || this.contentType) + "; charset=" + value;
+        if (value !== this.__charset) {
+            this.headers["content-type"] = (this.__contentType || this.contentType) + "; charset=" + value;
         }
-        this._charset = value;
+        this.__charset = value;
     }
 });
 
@@ -117,33 +118,33 @@ safeDefineProperty(Request.prototype, "contentType", {
     get: function() {
         var type, charset, index;
 
-        if (this._contentType != null) {
-            return this._contentType;
+        if (this.__contentType != null) {
+            return this.__contentType;
         } else {
             type = this.headers["content-type"];
 
             if (!type) {
-                this._contentType = "application/octet-stream";
+                this.__contentType = "application/octet-stream";
             } else {
                 if ((index = type.indexOf(";")) === -1) {
-                    this._contentType = type;
+                    this.__contentType = type;
                 } else {
-                    this._contentType = type.substring(0, index);
+                    this.__contentType = type.substring(0, index);
                     if ((charset = type.substring(index).split("=")[1])) {
-                        this._charset = charset;
+                        this.__charset = charset;
                     }
                 }
 
-                if ((index = (type = this._contentType).indexOf(",")) !== -1) {
-                    this._contentType = type.substring(0, index);
+                if ((index = (type = this.__contentType).indexOf(",")) !== -1) {
+                    this.__contentType = type.substring(0, index);
                 }
             }
 
-            return this._contentType;
+            return this.__contentType;
         }
     },
     set: function(value) {
-        var charset = this._charset || (this._charset = "utf-8"),
+        var charset = this.__charset || (this.__charset = "utf-8"),
             contentType, index;
 
         if ((index = value.indexOf(";")) === -1) {
@@ -151,12 +152,12 @@ safeDefineProperty(Request.prototype, "contentType", {
         } else {
             contentType = value.substring(0, index);
             if ((charset = value.substring(index).split("=")[1])) {
-                this._charset = charset;
+                this.__charset = charset;
             }
         }
 
-        this.headers["content-type"] = contentType + "; charset=" + this._charset;
-        this._contentType = contentType;
+        this.headers["content-type"] = contentType + "; charset=" + this.__charset;
+        this.__contentType = contentType;
     }
 });
 
@@ -164,22 +165,22 @@ safeDefineProperty(Request.prototype, "contentLength", {
     get: function() {
         var length;
 
-        if (this._contentLength != null) {
-            return this._contentLength;
+        if (this.__contentLength != null) {
+            return this.__contentLength;
         } else {
             length = +(this.headers["content-length"]);
 
             if (length) {
-                this._contentLength = length;
+                this.__contentLength = length;
             } else {
-                this._contentLength = 0;
+                this.__contentLength = 0;
             }
 
-            return this._contentLength;
+            return this.__contentLength;
         }
     },
     set: function(value) {
-        this._contentLength = this.headers["content-length"] = +value || 0;
+        this.__contentLength = this.headers["content-length"] = +value || 0;
     }
 });
 
@@ -214,7 +215,7 @@ Request.prototype.cookie = function(name) {
 };
 
 Request.prototype.cookies = function() {
-    return this._cookies ? this._cookies : (this._cookies = parseCookies(this.headers.cookie));
+    return this.__cookies ? this.__cookies : (this.__cookies = parseCookies(this.headers.cookie));
 };
 
 Request.prototype.accepts = function(types) {

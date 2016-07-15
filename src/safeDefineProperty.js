@@ -1,4 +1,4 @@
-var has = require("has");
+var has = require("@nathanfaucett/has");
 
 
 var defineProperty = Object.defineProperty;

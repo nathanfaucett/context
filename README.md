@@ -5,7 +5,7 @@ request and response interface
 
 
 ```javascript
-var ri = require("ri"),
+var ri = require("@nathanfaucett/ri"),
     config = {
         "json spaces": 4
     };
