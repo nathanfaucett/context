@@ -1,6 +1,6 @@
 {
   "name": "@nathanfaucett/ri",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "request and response interface",
   "repository": {
     "type": "git",
@@ -38,6 +38,6 @@
     "@nathanfaucett/is_string": "^0.0.1",
     "@nathanfaucett/mime": "^0.0.1",
     "@nathanfaucett/trim": "^0.0.1",
-    "@nathanfaucett/urls": "^0.0.2"
+    "@nathanfaucett/url": "^0.0.1"
   }
 }

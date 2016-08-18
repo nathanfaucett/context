@@ -7,8 +7,8 @@ var defineProperty = Object.defineProperty;
 module.exports = safeDefineProperty;
 
 
-function safeDefineProperty(obj, prop, desc) {
-    if (!has(obj, prop)) {
-        defineProperty(obj, prop, desc);
+function safeDefineProperty(object, prop, desc) {
+    if (!has(object, prop)) {
+        defineProperty(object, prop, desc);
     }
 }

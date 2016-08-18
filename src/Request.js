@@ -1,5 +1,5 @@
 var http = require("http"),
-    urls = require("@nathanfaucett/urls"),
+    url = require("@nathanfaucett/url"),
     has = require("@nathanfaucett/has"),
     isString = require("@nathanfaucett/is_string"),
     isObject = require("@nathanfaucett/is_object"),
@@ -16,7 +16,7 @@ var Request = module.exports = http.IncomingMessage,
 
 Request.prototype.init = function(res, config) {
     var headers = this.headers,
-        fullUrl = urls.parse(
+        fullUrl = url.parse(
             (this.protocol || (this.secure ? "https" : "http")) + "://" + headers.host + this.url,
             true,
             false

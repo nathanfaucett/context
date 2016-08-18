@@ -96,30 +96,30 @@ Response.prototype.send = function(code, body, headers) {
     return this.end();
 };
 
-Response.prototype.json = function(code, obj) {
+Response.prototype.json = function(code, object) {
     var body;
 
     if (typeof(code) !== "number") {
-        obj = code;
+        object = code;
         code = this.statusCode;
     }
 
-    body = this.JSONstringify(obj);
+    body = this.JSONstringify(object);
     this.contentType = "application/json";
 
     return this.send(code, body);
 };
 
-Response.prototype.jsonp = function(code, obj) {
+Response.prototype.jsonp = function(code, object) {
     var body, callback, callbackName;
 
     if (typeof(code) !== "number") {
-        callbackName = obj;
-        obj = code;
+        callbackName = object;
+        object = code;
         code = this.statusCode;
     }
 
-    body = this.JSONstringify(obj);
+    body = this.JSONstringify(object);
     callback = this.req.param((this.config["jsonp callback name"] || "callback"));
 
     this.setHeader("x-content-type-options", "nosniff");
