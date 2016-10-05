@@ -1,6 +1,6 @@
 {
   "name": "@nathanfaucett/ri",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "request and response interface",
   "repository": {
     "type": "git",
@@ -26,18 +26,18 @@
     "tap-spec": "^4.1.0",
     "tape": "^4.2.0",
     "zuul": "^3.6.0",
-    "@nathanfaucett/request": "^0.0.2"
+    "@nathanfaucett/request": "^0.0.8"
   },
   "dependencies": {
-    "@nathanfaucett/cookie": "^0.0.1",
+    "@nathanfaucett/cookie": "^0.0.2",
     "@nathanfaucett/escape_text_content": "^0.0.1",
-    "@nathanfaucett/has": "^0.0.1",
-    "@nathanfaucett/http_error": "^0.0.1",
+    "@nathanfaucett/has": "^0.0.2",
+    "@nathanfaucett/http_error": "^0.0.2",
     "@nathanfaucett/is_array": "^0.0.1",
     "@nathanfaucett/is_object": "^0.0.1",
     "@nathanfaucett/is_string": "^0.0.1",
-    "@nathanfaucett/mime": "^0.0.1",
+    "@nathanfaucett/mime": "^0.0.2",
     "@nathanfaucett/trim": "^0.0.1",
-    "@nathanfaucett/url": "^0.0.1"
+    "@nathanfaucett/url": "^0.0.2"
   }
 }
